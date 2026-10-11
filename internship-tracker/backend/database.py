@@ -12,15 +12,22 @@ connection.execute("""
 
 def get_applications():
     connection = sqlite3.connect("applications.db")
+
+    connection.row_factory = sqlite3.Row
+
     cursor = connection.execute("""
-        SELECT * FROM applications                          
+        SELECT * FROM applications
     """)
+
     rows = cursor.fetchall()
 
-    connection.close()
-    return rows
+    applications = [dict(row) for row in rows]
 
-def add_application(company: str, status: str):
+    connection.close()
+
+    return applications
+
+def create_application(company: str, status: str):
     connection = sqlite3.connect("applications.db")
     cursor = connection.execute("""
         INSERT INTO applications (company, status)
