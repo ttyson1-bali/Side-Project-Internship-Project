@@ -2,6 +2,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import database
+from pydantic import BaseModel
+
+class ApplicationCreate(BaseModel):
+    company: str
+    status: str
 
 app = FastAPI()
 app.add_middleware(
@@ -21,5 +26,17 @@ def get_applications():
     
 
 @app.post("/applications")
-def add_application():
-    
+def create_application(application: ApplicationCreate):
+
+    new_id = database.create_application(
+        company = application.company ,
+        status = application.status 
+    )
+    return {"id": new_id}
+
+data = {
+    "company": "HII", 
+    "status" : "offer"
+}
+applications = ApplicationCreate(**data)
+create_application(application= applications)
