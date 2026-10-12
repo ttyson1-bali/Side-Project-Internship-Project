@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
+from fastapi import HTTPException
 import database
 from pydantic import BaseModel
 
@@ -16,9 +17,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-@app.get("/")
-def root():
-    return {"message": "Internship Tracker API"}
 
 @app.get("/applications")
 def get_applications():
@@ -34,9 +32,12 @@ def create_application(application: ApplicationCreate):
     )
     return {"id": new_id}
 
-data = {
-    "company": "HII", 
-    "status" : "offer"
-}
-applications = ApplicationCreate(**data)
-create_application(application= applications)
+@app.delete("/applications/{id_num}")
+def delete_application(id_num: int):
+    deleted = database.delete_application(id_num)
+    if deleted:
+        return {"message": "Entry deleted successfully"}
+    raise HTTPException(
+        status_code = 404,
+        detail = "Application not found"
+    )

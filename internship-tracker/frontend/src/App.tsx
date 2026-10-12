@@ -110,6 +110,22 @@ function App() {
     )
   }
 
+  async function deleteData(id: number){
+    const response = await fetch(
+      `http://127.0.0.1:8000/applications/${id}`, {
+        method: "DELETE"
+      }
+    ) 
+    if (response.ok) {
+      deleteApplication(id)
+    }
+    else{
+      throw new Error("Failed to delete application")
+    }
+  }
+
+  
+
   // Load Applications on Mount
   useEffect(() => {
     getApplications()
@@ -124,7 +140,7 @@ function App() {
           id={application.id}
           company={application.company}
           status={application.status}
-          onDelete={deleteApplication}
+          onDelete={deleteData}
         />
       ))}
 

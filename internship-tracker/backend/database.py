@@ -41,5 +41,20 @@ def create_application(company: str, status: str):
     
     return new_id
 
+def delete_application(id_num: int):
+    connection = sqlite3.connect("applications.db")
+
+    cursor = connection.execute(
+        "DELETE FROM applications WHERE ID = ?"
+        , (id_num,)
+    )
+
+    deleted = cursor.rowcount > 0
+
+    connection.commit()
+    connection.close()
+
+    return deleted
+
 connection.commit()
 connection.close()
