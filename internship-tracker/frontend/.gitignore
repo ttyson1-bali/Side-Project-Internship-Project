@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 # macOS files
 .DS_Store
+
+__pycache__/
+*.pyc
+.venv/
+applications.db
