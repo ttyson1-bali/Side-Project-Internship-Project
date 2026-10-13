@@ -56,5 +56,20 @@ def delete_application(id_num: int):
 
     return deleted
 
+def update_application(id_num: int, status: str):
+    connection = sqlite3.connect("applications.db")
+    cursor = connection.execute("""
+        UPDATE applications 
+        SET status = ? 
+        WHERE id = ?                            
+    """, (status, id_num))
+
+    updated = cursor.rowcount > 0
+
+    connection.commit()
+    connection.close()
+
+    return updated
+
 connection.commit()
 connection.close()

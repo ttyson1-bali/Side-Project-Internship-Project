@@ -1,7 +1,10 @@
 import './App.css'
 import { useEffect, useState } from 'react'
 
+// ==========================================
 // Types
+// ==========================================
+
 type Application = {
   id: number
   company: string
@@ -10,9 +13,13 @@ type Application = {
 
 type ApplicationCardProps = Application & {
   onDelete: (id: number) => void
+  onUpdate: (id: number, status: string) => void
 }
 
+// ==========================================
 // Application Card Component
+// ==========================================
+
 function ApplicationCard(props: ApplicationCardProps) {
   return (
     <div className="title_card">
@@ -24,7 +31,19 @@ function ApplicationCard(props: ApplicationCardProps) {
         <p>Software Engineering Summer Scholar</p>
       </div>
 
-      <button>View Application</button>
+      <select
+        className="update_application"
+        value={props.status}
+        onChange={(event) => {
+          props.onUpdate(props.id, event.target.value)
+        }}
+      >
+        <option value="Application Submitted">Application Submitted</option>
+        <option value="Interviewing">Interviewing</option>
+        <option value="Offer">Offer</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Withdrawn">Withdrawn</option>
+      </select>
 
       <button onClick={() => props.onDelete(props.id)}>
         Delete Application
@@ -33,14 +52,24 @@ function ApplicationCard(props: ApplicationCardProps) {
   )
 }
 
+// ==========================================
 // Main Application
+// ==========================================
+
 function App() {
+
+  // ----------------------------------------
   // State
+  // ----------------------------------------
+
   const [companyInput, setCompanyInput] = useState('')
   const [statusInput, setStatusInput] = useState('Interviewing')
   const [applications, setApplications] = useState<Application[]>([])
 
+  // ----------------------------------------
   // GET: Fetch Applications
+  // ----------------------------------------
+
   async function getApplications() {
     try {
       const response = await fetch(
@@ -52,16 +81,17 @@ function App() {
       }
 
       const data = await response.json()
-  
-      console.log("APPLICATION DATA:", data)
-  
       setApplications(data)
+
     } catch (error) {
-      console.error('FETCH FAILED:', error)
+      console.error('GET FAILED:', error)
     }
   }
 
+  // ----------------------------------------
   // POST: Create Application
+  // ----------------------------------------
+
   async function addApplication() {
     if (!companyInput.trim()) {
       return
@@ -96,53 +126,110 @@ function App() {
           status: statusInput
         }
       ])
+
     } catch (error) {
       console.error('POST FAILED:', error)
     }
   }
 
-  // DELETE: Remove Application (Local State Only)
-  function deleteApplication(id: number) {
-    setApplications((previousApplications) =>
-      previousApplications.filter(
-        (application) => application.id !== id
+  // ----------------------------------------
+  // PATCH: Update Application Status
+  // ----------------------------------------
+
+  async function updateApplication(id: number, status: string) {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/applications/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            status: status
+          })
+        }
       )
-    )
-  }
 
-  async function deleteData(id: number){
-    const response = await fetch(
-      `http://127.0.0.1:8000/applications/${id}`, {
-        method: "DELETE"
+      if (!response.ok) {
+        throw new Error('Failed to update application')
       }
-    ) 
-    if (response.ok) {
-      deleteApplication(id)
-    }
-    else{
-      throw new Error("Failed to delete application")
+
+      setApplications((previousApplications) =>
+        previousApplications.map((application) => {
+          if (application.id === id) {
+            return {
+              ...application,
+              status: status
+            }
+          }
+
+          return application
+        })
+      )
+
+    } catch (error) {
+      console.error('PATCH FAILED:', error)
     }
   }
 
-  
+  // ----------------------------------------
+  // DELETE: Remove Application
+  // ----------------------------------------
 
+  async function deleteApplication(id: number) {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/applications/${id}`,
+        {
+          method: 'DELETE'
+        }
+      )
+
+      if (!response.ok) {
+        throw new Error('Failed to delete application')
+      }
+
+      setApplications((previousApplications) =>
+        previousApplications.filter(
+          (application) => application.id !== id
+        )
+      )
+
+    } catch (error) {
+      console.error('DELETE FAILED:', error)
+    }
+  }
+
+  // ----------------------------------------
   // Load Applications on Mount
+  // ----------------------------------------
+
   useEffect(() => {
     getApplications()
   }, [])
 
-  // UI
+  // ----------------------------------------
+  // User Interface
+  // ----------------------------------------
+
   return (
     <div className="Applications_class_map">
+
+      {/* Application Cards */}
+
       {applications.map((application) => (
         <ApplicationCard
           key={application.id}
           id={application.id}
           company={application.company}
           status={application.status}
-          onDelete={deleteData}
+          onDelete={deleteApplication}
+          onUpdate={updateApplication}
         />
       ))}
+
+      {/* Add Application Form */}
 
       <div>
         <h2>Add New Applications Here:</h2>
@@ -162,22 +249,22 @@ function App() {
             setStatusInput(event.target.value)
           }}
         >
+          <option value="Application Submitted">Application Submitted</option>
           <option value="Interviewing">Interviewing</option>
-          <option value="Application Submitted">
-            Application Submitted
-          </option>
           <option value="Offer">Offer</option>
           <option value="Rejected">Rejected</option>
+          <option value="Withdrawn">Withdrawn</option>
         </select>
 
         <br />
 
         <button onClick={addApplication}>
-          Add application
+          Add Application
         </button>
 
         <p>{statusInput}</p>
       </div>
+
     </div>
   )
 }

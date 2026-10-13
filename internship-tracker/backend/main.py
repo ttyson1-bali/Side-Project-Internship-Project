@@ -9,6 +9,9 @@ class ApplicationCreate(BaseModel):
     company: str
     status: str
 
+class ApplicationUpdate(BaseModel):
+    status: str
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -35,9 +38,21 @@ def create_application(application: ApplicationCreate):
 @app.delete("/applications/{id_num}")
 def delete_application(id_num: int):
     deleted = database.delete_application(id_num)
+
     if deleted:
         return {"message": "Entry deleted successfully"}
     raise HTTPException(
         status_code = 404,
         detail = "Application not found"
+    )
+
+@app.patch("/applications/{id_num}")
+def update_application(id_num:int, application: ApplicationUpdate ):
+    update = database.update_application(id_num, application.status)
+
+    if update:
+        return{"message": "Entry updated successfully"}
+    raise HTTPException(
+        status_code = 404,
+        detail = "Application could not be updated"
     )
