@@ -79,7 +79,29 @@ function App() {
   
     return matchesStatus && matchesSearch
   })
+// ----------------------------------------
+// Dashboard Statistics
+// ----------------------------------------
 
+const stats = {
+  total: applications.length,
+
+  submitted: applications.filter(
+    (app) => app.status === 'Application Submitted'
+  ).length,
+
+  interviewing: applications.filter(
+    (app) => app.status === 'Interviewing'
+  ).length,
+
+  offers: applications.filter(
+    (app) => app.status === 'Offer'
+  ).length,
+
+  rejected: applications.filter(
+    (app) => app.status === 'Rejected'
+  ).length
+}
   // ----------------------------------------
   // GET: Fetch Applications
   // ----------------------------------------
@@ -231,7 +253,43 @@ function App() {
 
   return (
     <div className="Applications_class_map">
+      {/* Dashboard Header */}
 
+<div className="dashboard_header">
+  <h1>Internship Tracker</h1>
+  <p>Your internship application dashboard</p>
+</div>
+
+{/* Dashboard Statistics */}
+
+      <div className="stats_container">
+
+        <div className="stat_card">
+          <h3>Total Applications</h3>
+          <p>{stats.total}</p>
+        </div>
+
+        <div className="stat_card">
+          <h3>Submitted</h3>
+          <p>{stats.submitted}</p>
+        </div>
+
+        <div className="stat_card">
+          <h3>Interviews</h3>
+          <p>{stats.interviewing}</p>
+        </div>
+
+        <div className="stat_card">
+          <h3>Offers</h3>
+          <p>{stats.offers}</p>
+        </div>
+
+        <div className="stat_card">
+          <h3>Rejected</h3>
+          <p>{stats.rejected}</p>
+        </div>
+
+      </div>
       <div className ="search_bar"> 
         
         <input type="text" 
