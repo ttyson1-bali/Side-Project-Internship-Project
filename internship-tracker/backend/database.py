@@ -6,7 +6,8 @@ connection.execute("""
     CREATE TABLE IF NOT EXISTS applications (
         id INTEGER PRIMARY KEY,
         company TEXT NOT NULL,
-        status TEXT NOT NULL
+        status TEXT NOT NULL,
+        position TEXT NOT NULL
     )
 """)
 
@@ -27,12 +28,12 @@ def get_applications():
 
     return applications
 
-def create_application(company: str, status: str):
+def create_application(company: str, status: str, position: str):
     connection = sqlite3.connect("applications.db")
     cursor = connection.execute("""
-        INSERT INTO applications (company, status)
-            VALUES (? , ?)
-        """,(company, status))
+        INSERT INTO applications (company, status, position)
+            VALUES (?, ?, ?)
+        """,(company, status, position))
     #Fetches ID generated for the newly inserted row
     new_id = cursor.lastrowid
 

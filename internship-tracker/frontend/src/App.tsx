@@ -9,6 +9,7 @@ type Application = {
   id: number
   company: string
   status: string
+  position: string
 }
 
 type ApplicationCardProps = Application & {
@@ -28,7 +29,7 @@ function ApplicationCard(props: ApplicationCardProps) {
       <div>
         <h2>Company: {props.company}</h2>
         <p className="status">Status: {props.status}</p>
-        <p>Software Engineering Summer Scholar</p>
+        <p>Position: {props.position}</p>
       </div>
 
       <select
@@ -64,6 +65,7 @@ function App() {
 
   const [companyInput, setCompanyInput] = useState('')
   const [statusInput, setStatusInput] = useState('Interviewing')
+  const[positionInput, setPositionInput] = useState("")
   const [applications, setApplications] = useState<Application[]>([])
 
   // ----------------------------------------
@@ -107,7 +109,8 @@ function App() {
           },
           body: JSON.stringify({
             company: companyInput,
-            status: statusInput
+            status: statusInput,
+            position: positionInput
           })
         }
       )
@@ -123,7 +126,8 @@ function App() {
         {
           id: data.id,
           company: companyInput,
-          status: statusInput
+          status: statusInput,
+          position: positionInput
         }
       ])
 
@@ -224,6 +228,7 @@ function App() {
           id={application.id}
           company={application.company}
           status={application.status}
+          position={application.position}
           onDelete={deleteApplication}
           onUpdate={updateApplication}
         />
@@ -255,14 +260,19 @@ function App() {
           <option value="Rejected">Rejected</option>
           <option value="Withdrawn">Withdrawn</option>
         </select>
-
-        <br />
+        <input
+          type="text"
+          placeholder="Position"
+          value={positionInput}
+          onChange={(event) => {
+            setPositionInput(event.target.value)
+          }}
+        />
 
         <button onClick={addApplication}>
           Add Application
         </button>
 
-        <p>{statusInput}</p>
       </div>
 
     </div>

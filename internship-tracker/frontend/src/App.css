@@ -1,16 +1,327 @@
-.application-card{
-  border: 1px solid gray;
-  padding: 20px;
+/* ==========================================
+   GLOBAL STYLES
+========================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #f1f5f9;
+  background-color: #0b1120;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, #1e1b4b 0%, transparent 35%),
+    radial-gradient(circle at bottom right, #172554 0%, transparent 35%),
+    #0b1120;
+}
+
+/* ==========================================
+   MAIN APPLICATION CONTAINER
+========================================== */
+
+.Applications_class_map {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+  padding: 60px 0;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+/* ==========================================
+   APPLICATION CARDS
+========================================== */
+
+.title_card {
+  background: rgba(30, 41, 59, 0.75);
+  backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 18px;
+
+  padding: 26px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.title_card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(139, 92, 246, 0.5);
+
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(139, 92, 246, 0.08);
+}
+
+/* ==========================================
+   CARD TYPOGRAPHY
+========================================== */
+
+.title_card h1 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+
+  color: #a78bfa;
+  margin: 0 0 24px;
+}
+
+.title_card h2 {
+  font-size: 23px;
+  font-weight: 700;
+
+  color: #f8fafc;
+  margin: 0 0 16px;
+  overflow-wrap: anywhere;
+}
+
+.title_card p {
+  font-size: 14px;
+  color: #94a3b8;
+
+  line-height: 1.7;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
+.title_card .status {
+  color: #c4b5fd;
+  font-weight: 600;
+}
+
+/* ==========================================
+   DROPDOWNS
+========================================== */
+
+select {
+  width: 100%;
+  padding: 12px 14px;
+
+  background: #0f172a;
+  color: #f8fafc;
+
+  border: 1px solid #334155;
   border-radius: 10px;
+
+  font-size: 14px;
+  font-family: inherit;
+
+  cursor: pointer;
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.title_card{
-  padding: 20px;
-  ;
+select:hover {
+  border-color: #8b5cf6;
 }
 
-.status{
-  font-weight: bold;
-  text-align: center;
-  padding: auto;
+select:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.update_application {
+  margin-top: 20px;
+  margin-bottom: 14px;
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+button {
+  width: 100%;
+  padding: 12px 18px;
+
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
+  color: white;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(124, 58, 237, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Delete buttons */
+
+.title_card button {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.title_card button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+
+  box-shadow: none;
+}
+
+/* ==========================================
+   ADD APPLICATION FORM
+========================================== */
+
+.Applications_class_map > div:not(.title_card) {
+  background: rgba(30, 41, 59, 0.85);
+
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 18px;
+
+  padding: 28px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25);
+
+  grid-column: 1 / -1;
+}
+
+.Applications_class_map > div:not(.title_card) h2 {
+  font-size: 22px;
+  font-weight: 700;
+
+  margin: 0 0 24px;
+  color: #f8fafc;
+}
+
+/* ==========================================
+   INPUT FIELDS
+========================================== */
+
+input {
+  width: 100%;
+  padding: 14px 16px;
+
+  background: #0f172a;
+  color: #f8fafc;
+
+  border: 1px solid #334155;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-family: inherit;
+
+  outline: none;
+
+  margin-bottom: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input::placeholder {
+  color: #64748b;
+}
+
+input:hover {
+  border-color: #64748b;
+}
+
+input:focus {
+  border-color: #a78bfa;
+
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+/* Form dropdown */
+
+.Applications_class_map > div:not(.title_card) select {
+  margin-bottom: 14px;
+}
+
+/* Form submit button */
+
+.Applications_class_map > div:not(.title_card) button {
+  margin-top: 8px;
+}
+
+/* Selected status preview */
+
+.Applications_class_map > div:not(.title_card) p {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 16px;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 1000px) {
+  .Applications_class_map {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .Applications_class_map {
+    grid-template-columns: 1fr;
+    padding: 30px 0;
+  }
+
+  .title_card {
+    padding: 22px;
+  }
+
+  .Applications_class_map > div:not(.title_card) {
+    padding: 22px;
+  }
+
+  .title_card h2 {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

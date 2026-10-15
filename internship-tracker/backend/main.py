@@ -8,6 +8,7 @@ from pydantic import BaseModel
 class ApplicationCreate(BaseModel):
     company: str
     status: str
+    position: str
 
 class ApplicationUpdate(BaseModel):
     status: str
@@ -31,7 +32,8 @@ def create_application(application: ApplicationCreate):
 
     new_id = database.create_application(
         company = application.company ,
-        status = application.status 
+        status = application.status ,
+        position = application.position
     )
     return {"id": new_id}
 
