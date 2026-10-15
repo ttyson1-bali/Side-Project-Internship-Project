@@ -24,12 +24,11 @@ type ApplicationCardProps = Application & {
 function ApplicationCard(props: ApplicationCardProps) {
   return (
     <div className="title_card">
-      <h1>Internship Tracker</h1>
 
       <div>
-        <h2>Company: {props.company}</h2>
+        <h2>{props.company}</h2>
         <p className="status">Status: {props.status}</p>
-        <p>Position: {props.position}</p>
+        <p>{props.position}</p>
       </div>
 
       <select
@@ -67,6 +66,19 @@ function App() {
   const [statusInput, setStatusInput] = useState('Interviewing')
   const[positionInput, setPositionInput] = useState("")
   const [applications, setApplications] = useState<Application[]>([])
+  const [statusFilter, setStatusFilter] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredApplications = applications.filter((application) => {
+    const matchesStatus =
+      statusFilter === 'All' || application.status === statusFilter
+  
+    const matchesSearch =
+      application.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      application.position.toLowerCase().includes(searchQuery.toLowerCase())
+  
+    return matchesStatus && matchesSearch
+  })
 
   // ----------------------------------------
   // GET: Fetch Applications
@@ -220,9 +232,30 @@ function App() {
   return (
     <div className="Applications_class_map">
 
+      <div className ="search_bar"> 
+        
+        <input type="text" 
+        placeholder='Search Applications'
+        value={searchQuery}
+        onChange={(event) => setSearchQuery(event.target.value)}
+        />
+
+      <select
+        value={statusFilter}
+        onChange={(event) => setStatusFilter(event.target.value)}
+      >
+        <option value="All">All Applications</option>
+        <option value="Application Submitted">Submitted</option>
+        <option value="Interviewing">Interviewing</option>
+        <option value="Offer">Offers</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Withdrawn">Withdrawn</option>
+      </select>
+      </div>
+
       {/* Application Cards */}
 
-      {applications.map((application) => (
+      {filteredApplications.map((application) => (
         <ApplicationCard
           key={application.id}
           id={application.id}
