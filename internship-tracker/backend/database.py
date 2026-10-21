@@ -8,9 +8,38 @@ connection.execute("""
         company TEXT NOT NULL,
         status TEXT NOT NULL,
         position TEXT NOT NULL
+        
     )
 """)
 
+def add_location_column():
+    connection = sqlite3.connect("applications.db")
+
+    new_columns = {
+        "location": "TEXT",
+        "salary": "REAL",
+        "salary_type": "TEXT",
+        "date_applied": "TEXT",
+        "work_model": "TEXT",
+        "job_url": "TEXT",
+        "notes": "TEXT"
+    }
+
+    cursor = connection.execute("PRAGMA table_info(applications)")
+    columns = [row[1] for row in cursor.fetchall()]
+
+    print("Existing columns:", columns)
+
+    for key in new_columns:
+        if key not in columns:
+            connection.execute(
+                f"ALTER TABLE applications ADD COLUMN {key} {new_columns[key]}"
+            )
+            print(f"Added column: {key}")
+
+    connection.commit()
+    connection.close()
+    
 def get_applications():
     connection = sqlite3.connect("applications.db")
 
@@ -74,3 +103,6 @@ def update_application(id_num: int, status: str):
 
 connection.commit()
 connection.close()
+
+if __name__ == "__main__":
+    add_location_column()
